@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Console</title>
+  <style>
+    #buttonsContainer button{
+      display: block;
+      width: 50vw;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Console here</h1>
+
+  <form id="csvUploadForm">
+    <input type="file" id="csvFileInput" accept=".csv" />
+    <button type="submit">Upload CSV</button>
+  </form>
+
+  <div id="buttonsContainer"></div>
+
+  <script>
+    const channel = new BroadcastChannel('my_channel');
+    // Send a message to the other tab
+    function sendMessage(message) {
+      channel.postMessage(message);
+    }
+    // Handle form submission
+    document.getElementById('csvUploadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var fileInput = document.getElementById('csvFileInput');
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function(event) {
+        var csvData = event.target.result;
+        var rows = csvData.split('\n');
+
+        var buttonsContainer = document.getElementById('buttonsContainer');
+
+        var sub = [];
+        for (var i = 0; i < rows.length; i++) {
+          var columns = rows[i].split(',');
+          if (columns.length >= 2) {
+            var newButton = document.createElement('button');
+            newButton.innerText = columns[0];
+            newButton.id = i;
+            sub[i] = columns[1]; // Get the content from column B
+            console.log(sub[i]);
+            newButton.addEventListener('click', function(e) {
+              
+              console.log(sub[e.target.id]);
+              channel.postMessage(sub[e.target.id], '*');
+            });
+
+            buttonsContainer.appendChild(newButton);
+          }
+        }
+      };
+
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
