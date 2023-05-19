@@ -4,7 +4,7 @@
   <title>Slide show</title>
   <style>
     body{
-      background: url(Slide/Backdrop.png);
+      background: url(Slide/1.png);
       background-repeat: no-repeat;
       background-size: cover;
     }
@@ -15,7 +15,7 @@
       font-size: 5vh;
       text-align: center;
       position: fixed;
-      bottom: 5%;
+      bottom: 2.5%;
       left: 50%;
       transform: translateX(-50%);
       width: 75%;
@@ -27,7 +27,7 @@
   </style>
 </head>
 <body>
-  <p id = "subtitle">Đây là subtitle rất dàiĐây là subtitle rất dàiĐây là subtitle rất dàiĐây là subtitle rất dàiĐây là subtitle rất dàiĐây là subtitle rất dàiĐây là </p>
+  <p id = "subtitle">Subtitle by NaviAI</p>
 
   <script>
     // Create a BroadcastChannel
@@ -36,8 +36,11 @@
     // Listen for messages from the other tab
     channel.onmessage = function(event) {
       var message = event.data;
-      console.log('Received message: ' + message);
-      displaySub.innerHTML = message;
+      console.log('Received message: ' + message.type);
+      if (message.type === "sub")
+        displaySub.innerHTML = message.content;
+      else if (message.type === "slide")
+        document.body.style.backgroundImage = "url('Slide/" + message.content + "')";
     };
   </script>
 </body>
